@@ -1,0 +1,7 @@
+*.exe
+
+*Arena/
+
+*/output/
+
+.vscode/
