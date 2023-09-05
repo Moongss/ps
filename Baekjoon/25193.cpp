@@ -10,7 +10,6 @@ int main() {
 
     int chickenCnt = 0;
     int otherCnt = 1;
-    int result[100001] = {0,};
     for (int i = 0; i < N; i++){ 
         if (S[i] == 'C')
             chickenCnt++;
@@ -18,15 +17,9 @@ int main() {
             otherCnt++;
     }
 
-    int tmp = 0;
-    while (chickenCnt) {
-        tmp %= otherCnt;
-        result[tmp]++;
-        
-        tmp++;
-        chickenCnt--;
-    }
-
-    std::cout << result[tmp - 1] << std::endl;
+    int result = chickenCnt / otherCnt;
+    if (chickenCnt % otherCnt)
+        result++;
+    std::cout << result << std::endl;
     return 0;
 }

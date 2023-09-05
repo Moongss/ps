@@ -26,7 +26,7 @@ int main() {
         }
 
         tmp = 0;
-        if (targetIdx > dq.size() / 2) { // ë’¤ë¡œ ë„˜ê¸°ë©´ ì¹´ìš´íŠ¸ê°€ í•˜ë‚˜ ë” ì¦ê°€í•œë‹¤...
+        if (targetIdx > dq.size() / 2) { // µÚ·Î ³Ñ±â¸é Ä«¿îÆ®°¡ ÇÏ³ª ´õ Áõ°¡ÇÑ´Ù...
             while (true) {
                 if (target == dq.front())
                     break;

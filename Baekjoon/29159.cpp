@@ -52,7 +52,7 @@ int main() {
 
     // std::cout << "s2_x : " << s2_x.first << "s2_x : " << s2_x.second << std::endl;
     // std::cout << "s2_y : " << s2_y.first << "s2_y : " << s2_y.second << std::endl;
-    long focus_s1_x = (s1_x.second + s1_x.first); // /2 ì•ˆ í•œê±°ì„.
+    long focus_s1_x = (s1_x.second + s1_x.first); // /2 ¾È ÇÑ°ÅÀÓ.
     long focus_s1_y = (s1_y.second + s1_y.first);
     long focus_s2_x = (s2_x.second + s2_x.first);
     long focus_s2_y = (s2_y.second + s2_y.first);
@@ -69,7 +69,7 @@ int main() {
 
        if (k < 0) k *= -1;
        if (x2x1 < 0) {y2y1 *= -1; x2x1 *= -1;}
-        std::cout << y2y1 / k << "/" << x2x1 /k << " "; // ê¸°ì•½ë¶„ìˆ˜ í•´ì•¼ë¨
+        std::cout << y2y1 / k << "/" << x2x1 /k << " "; // ±â¾àºĞ¼ö ÇØ¾ßµÊ
 
     }
     else {
