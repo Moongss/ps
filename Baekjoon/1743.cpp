@@ -26,19 +26,21 @@ int main() {
         trashQueue.push(std::make_pair(x, y));
     }
 
-    std::queue<std::pair<int, int> > q;
+    std::queue<std::pair<int, int>> q;
     int result = -1;
     while (!trashQueue.empty()) {
 
         q.push(trashQueue.front());
         trashQueue.pop();
+        
+        visit[q.front().first][q.front().second] = true;
         int tmp = 0;
         while (!q.empty()) {
             std::pair<int, int> elem = q.front();
             q.pop();
 
-            if (visit[elem.first][elem.second] == true)
-                continue;
+            // if ( visit[elem.first][elem.second] == true)
+            //     continue;
             tmp++;
 
             for (int i = 0; i < 4; i++) {
