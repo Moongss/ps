@@ -34,8 +34,8 @@ bool isOVERDOSE = false;
 int actionCnt = 0;
 int actionCntAfterOVERDOSE = 0;
 
-char map[51][51];
-int monsterMap[51][51];
+char map[52][52];
+int monsterMap[52][52];
 typedef std::pair<int, int> pos;
 
 pos playerPos, goalPos;
@@ -46,24 +46,18 @@ int dy[4] = {1, -1, 0, 0};
 
 Player player = {5, 1, 1, 10, 0, 1};
 
-void levelup() {
+void levelUp() {
     player.attackPower += player.level;
     player.attackRange += 1;
     player.demandExp += 10;
-    player.level += 1; // not levelup... in contest
+    player.level += 1;
 }
 
-void updatePlayerExp(int exp) {
-    player.currentExp += exp;
+void checkPlayerExp() {
     while (player.currentExp >= player.demandExp) {
         player.currentExp -= player.demandExp;
-        levelup();
+        levelUp();
     }
-}
-
-void printMonsterInfo(int monsterIdx) {
-    Monster monster = monsterInfoList[monsterIdx];
-    std::cout << monster.health << std::endl;
 }
 
 void printMap() {
@@ -73,6 +67,11 @@ void printMap() {
         }
         std::cout << std::endl;
     }
+}
+
+void printMonsterInfo(int monsterIdx) {
+    Monster monster = monsterInfoList[monsterIdx];
+    std::cout << monster.health << std::endl;
 }
 
 void printGameResult() {
@@ -121,6 +120,10 @@ void updatePlayerPos(pos newPos) {
     updateActionCnt(1);
 }
 
+bool isPlayer(pos pos) {
+    return (map[pos.first][pos.second] == 'p');
+}
+
 bool isMonster(pos pos) {
     return (map[pos.first][pos.second] == 'm');
 }
@@ -129,6 +132,9 @@ bool isObstacle(pos pos) {
     return (map[pos.first][pos.second] == '*');
 }
 
+bool isGoal(pos pos) {
+    return (map[pos.first][pos.second] == 'g');
+}
 
 void playerAttack(MOVE move) {
     pos actionPos = playerPos;
@@ -143,18 +149,24 @@ void playerAttack(MOVE move) {
             int monsterIdx = monsterMap[actionPos.first][actionPos.second];
             Monster &monster = monsterInfoList[monsterIdx];
 
-
             int damage = player.attackPower - monster.defense;
             if (damage >= 0) {
                 monster.health -= damage;
                 if (monster.health <= 0) {
                     updateMap(actionPos, '.');
-                    updatePlayerExp(monster.exp);
+                    player.currentExp += monster.exp;
                 }
             }
         }
     }
     updateActionCnt(3);
+}
+
+void eatPill(int speed) {
+    eatPillCnt++;
+    player.moveSpeed += speed;
+    player.moveSpeed = std::max(0, player.moveSpeed);
+    updateActionCnt(2);
 }
 
 int main() {
@@ -191,73 +203,70 @@ int main() {
 
     std::cin >> S;
     std::string action;
+    bool isClear = false;
     for (int i = 0; i < S; i++) {
         std::cin >> action;
         // std::cout << "action : " << action << std::endl;
-        if (!isClear) {
-            if (action.length() == 1) {
-                if (action[0] == 'w') {
-                    updateActionCnt(1);
-                }
-                else if (action[0] == 'c' && !isOVERDOSE) {
-                    if (playerPos.first == goalPos.first && 
-                        playerPos.second == goalPos.second) {
-                        updateMap(goalPos, 'p');
-                        isClear = true;
-                        continue;
-                    }
-                }
-                else { // move
-                    if (action[0] == 'u') {
-                        int newX = playerPos.first + dx[MOVE::u] * player.moveSpeed;
-                        int newY = playerPos.second + dy[MOVE::u] * player.moveSpeed;
-                        updatePlayerPos(std::make_pair(newX, newY));
-                    }
-                    if (action[0] == 'd') {
-                        int newX = playerPos.first + dx[MOVE::d] * player.moveSpeed;
-                        int newY = playerPos.second + dy[MOVE::d] * player.moveSpeed;
-                        updatePlayerPos(std::make_pair(newX, newY));
-                    }
-                    if (action[0] == 'l') {
-                        int newX = playerPos.first + dx[MOVE::l] * player.moveSpeed;
-                        int newY = playerPos.second + dy[MOVE::l] * player.moveSpeed;
-                        updatePlayerPos(std::make_pair(newX, newY));
-                    }
-                    if (action[0] == 'r') {
-                        int newX = playerPos.first + dx[MOVE::r] * player.moveSpeed;
-                        int newY = playerPos.second + dy[MOVE::r] * player.moveSpeed;
-                        updatePlayerPos(std::make_pair(newX, newY));
-                    }
+        if (isClear)
+            continue;
+        if (action.length() == 1) {
+            if (action[0] == 'w') {
+                updateActionCnt(1);
+            }
+            else if (action[0] == 'c' && !isOVERDOSE) {
+                if (playerPos.first == goalPos.first && 
+                    playerPos.second == goalPos.second) {
+                    updateMap(goalPos, 'p');
+                    isClear = true;
+                    continue;
                 }
             }
-            else {
-                if (action.compare("au") == 0 && !isOVERDOSE) {
-                    playerAttack(MOVE::u);
+            else { // move
+                if (action[0] == 'u') {
+                    int newX = playerPos.first + dx[MOVE::u] * player.moveSpeed;
+                    int newY = playerPos.second + dy[MOVE::u] * player.moveSpeed;
+                    updatePlayerPos(std::make_pair(newX, newY));
                 }
-                if (action.compare("ad") == 0 && !isOVERDOSE) {
-                    playerAttack(MOVE::d);
+                if (action[0] == 'd') {
+                    int newX = playerPos.first + dx[MOVE::d] * player.moveSpeed;
+                    int newY = playerPos.second + dy[MOVE::d] * player.moveSpeed;
+                    updatePlayerPos(std::make_pair(newX, newY));
                 }
-                if (action.compare("ar") == 0 && !isOVERDOSE) {
-                    playerAttack(MOVE::r);
+                if (action[0] == 'l') {
+                    int newX = playerPos.first + dx[MOVE::l] * player.moveSpeed;
+                    int newY = playerPos.second + dy[MOVE::l] * player.moveSpeed;
+                    updatePlayerPos(std::make_pair(newX, newY));
                 }
-                if (action.compare("al") == 0 && !isOVERDOSE) {
-                    playerAttack(MOVE::l);
-                }
-                if (action.compare("dd") == 0 && !isOVERDOSE) {
-                    if (player.moveSpeed > 0)
-                        player.moveSpeed--;
-                    eatPillCnt++;
-                    updateActionCnt(2);
-                }
-                if (action.compare("du") == 0 && !isOVERDOSE) {
-                    player.moveSpeed++;
-                    eatPillCnt++;
-                    updateActionCnt(2);
+                if (action[0] == 'r') {
+                    int newX = playerPos.first + dx[MOVE::r] * player.moveSpeed;
+                    int newY = playerPos.second + dy[MOVE::r] * player.moveSpeed;
+                    updatePlayerPos(std::make_pair(newX, newY));
                 }
             }
-            if (map[goalPos.first][goalPos.second] != 'g') {
-                map[goalPos.first][goalPos.second] = 'g';
+        }
+        else {
+            if (action.compare("au") == 0 && !isOVERDOSE) {
+                playerAttack(MOVE::u);
             }
+            if (action.compare("ad") == 0 && !isOVERDOSE) {
+                playerAttack(MOVE::d);
+            }
+            if (action.compare("ar") == 0 && !isOVERDOSE) {
+                playerAttack(MOVE::r);
+            }
+            if (action.compare("al") == 0 && !isOVERDOSE) {
+                playerAttack(MOVE::l);
+            }
+            if (action.compare("dd") == 0 && !isOVERDOSE) {
+                eatPill(-1);
+            }
+            if (action.compare("du") == 0 && !isOVERDOSE) {
+                eatPill(1);
+            }
+        }
+        checkPlayerExp(); //"한 가지 행동이 끝난 후 경험치를 얻어 요구 경험치 이상시 레벨업
+        if (!isPlayer(goalPos) && !isGoal(goalPos)) {
+            updateMap(goalPos, 'g');
         }
     }
     printGameResult();
