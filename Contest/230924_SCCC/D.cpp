@@ -11,14 +11,15 @@ int main() {
 
     if (N == 0)
         std::cout << 0 << "\n";
-    else {
-        for (long long i = sqrt(N); i >= 1; i++) {
-            if (N % i == 0) {
-        		std::cout << i + N / i << "\n";
-        		break;
-            }
-        }
-    }
+    else { 
+        long long i = sqrt(N);
 
+        if (i * i == N)
+            std::cout << i + i << "\n";
+        else if (i * i < N && N <= i * (i + 1)) 
+            std::cout << i + i + 1 << "\n";
+        else 
+            std::cout << i + i + 2 << "\n";
+    }
     return 0;
 }
