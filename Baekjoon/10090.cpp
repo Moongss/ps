@@ -10,40 +10,43 @@ int N, M;
 
 void update(int start, int end, int target, int node) {
   if (target < start || end < target)
-    return ;
+    return;
   if (start == end) {
-    tree[node]++;
-    return ;
+    tree[node] = 1;
+    return;
   }
 
   int mid = (start + end) / 2;
   update(start, mid, target, node * 2); 
   update(mid + 1, end, target, node * 2 + 1); 
-  tree[node] = tree[node * 2] + tree[node * 2 + 1];
+  tree[node] = tree[node * 2] + tree[node * 2 + 1]; //same as ++;
 }
 
-int solve(int start, int end, int target, int node) {
-  if (target < start || end < target)
+int getPrefixSum(int start, int end, int left, int right, int node) {
+  if (right < start || end < left)
+    return 0;
+  if (left <= start && end <= right) {
+    return tree[node];
+  }
 
   int mid = (start + end) / 2;
-  solve(start, mid, target, node * 2);
-  solve(mid + 1, end, target, node * 2 + 1);
+  return getPrefixSum(start, mid, left, right, node * 2) + 
+         getPrefixSum(mid + 1, end, left, right, node * 2 + 1);
 }
 
 int main() {
-  std::ios_base::sync_with_stdio(false);
-  std::cin.tie(0);
-  std::cout.tie(0);
-
+  std::cin.tie(0)->sync_with_stdio(0);
+  
   std::cin >> N;
+  long result = 0;
   for (int i = 1; i <= N; i++) {
-    std::cin >> arr[i];
+    int idx;
+    std::cin >> idx;
+    
+    result += getPrefixSum(1, N, idx, N, 1);
+    update(1, N, idx, 1);
   }
 
-  init(1, N, 1);
-  for (int i = 1; i <= N; i++) {
-    solve(1, i, i, 1);
-  }
   std::cout << result << std::endl;
   return 0;
 }
