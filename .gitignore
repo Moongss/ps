@@ -6,4 +6,8 @@
 
 .vscode/
 
+*a.out
+
 *.DS_Store
+
+*test.cpp
