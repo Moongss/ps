@@ -28,7 +28,6 @@ int main() {
             }
         }
     } else {
-        //EDITORIAL VER: 짜피 N - 1개니까 그냥 하나 잡고 하면 되는거였음...
         int cnt = 0;
         for (int i = 2; i <= N; i++) {
             if (!arr[1][i]) cnt++;
