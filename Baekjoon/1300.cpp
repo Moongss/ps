@@ -26,19 +26,17 @@ ll solve(ll target) {
 int main() {
     std::cin >> N >> K;
 
-    ll lo = 1;
-    ll hi = 1e+9;
+    ll lo = 0; // 1
+    ll hi = 1e+10;
     ll result = 0;
-    while (lo <= hi) {
+    while (lo + 1 < hi) { // lo <= hi
         ll mid = (lo + hi) / 2;
-        std::cout << "mid : " << mid << std::endl;
         if (solve(mid) < K) {
-            lo = mid + 1;
-        } else {
-            result = mid;
-            hi = mid - 1;
+            lo = mid;
+        } else { // result variable setting. (if condition is lo <= hi)
+            hi = mid;
         }
     }
-    std::cout << result << std::endl;
+    std::cout << hi << std::endl;
     return 0;
 }
