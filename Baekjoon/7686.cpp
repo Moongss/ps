@@ -55,7 +55,11 @@ int main() {
                 hi = mid;
             }
         }
-        std::cout << (int)(lo * 100) << std::endl;
+
+        //WA
+        //std::cout << (int)(lo * 100) << std::endl;
+        //std::cout << (lo * 100) << std::endl;
+        printf("%.0Lf\n", lo * 100);
     }
     return 0;
 }
