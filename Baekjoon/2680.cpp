@@ -13,6 +13,17 @@ std::string encodeStr;
 std::string decodeStr;
 std::string result;
 
+int getDecimal(std::string bitString) {
+    int cur = 1;
+    int sum = 0;
+    for (int i = bitString.length() - 1; i >= 0; i--) {
+        if (bitString[i] == '1')
+            sum += cur;
+        cur *= 2;
+    }
+    return sum;
+}
+
 void decode(std::string target) {
     decodeStr = "";
     for (int i = 0; i < target.length(); i++) {
@@ -37,10 +48,9 @@ void decode(std::string target) {
 int getCountBits(std::string str, int mode, int idx) {
     int result = 0;
     int cur = 1;
-    std::cout << "str : " << str << std::endl;
+
     if (mode == MODE_NUMERIC) {
         std::string tmp = str.substr(idx, 10);
-        std::cout << "TMP : " << tmp << std::endl;
         for (int i = 9; i >= 0; i--) {
             if (tmp[i] == '1')
                 result += cur;
@@ -48,7 +58,6 @@ int getCountBits(std::string str, int mode, int idx) {
         }
     } else if (mode == MODE_ALPHA_NUMERIC) {
         std::string tmp = str.substr(idx, 9);
-        std::cout << "TMP : " << tmp << std::endl;
         for (int i = 8; i >= 0; i--) {
             if (tmp[i] == '1')
                 result += cur;
@@ -56,8 +65,6 @@ int getCountBits(std::string str, int mode, int idx) {
         }
     } else if (mode == MODE_8_BIT_BYTE || mode == MODE_KANJI) {
         std::string tmp = str.substr(idx, 8);
-        std::cout << "idx : " << idx << ", str.length : " << str.length() << std::endl;
-        std::cout << "TMP : " << tmp << std::endl;
         for (int i = 7; i >= 0; i--) {
             if (tmp[i] == '1')
                 result += cur;
@@ -74,170 +81,125 @@ int main() {
     std::cin.ignore();
 
     while (P--) {
-        getline(std::cin, encodeStr);
+        getline(std::cin, encodeStr, '\n');
         decode(encodeStr);
 
+        result = "";
         size_t idx = 0;
         int len = 0;
-        while (idx < decodeStr.length()) {
+        while (idx < 152) {
+            // WA: 터미네이션 코드로 데이터는 종료되며 만일 데이터 코드를 저장할 공간이 없다면 터미네이션 코드는 생략되거나 불완전한 형태일 수도 있다.
+            if (idx + 4 >= 152)
+                break;
             std::string modeBits = decodeStr.substr(idx, 4);
             idx += 4;
 
-            std::cout << "modeBits : " << modeBits << std::endl;
-            //3 Numeric
-            //2 Alphanumeric
-            //1 8bitbyte
-            //0 kanji
-            //x termination
             int countBits;
+            int sum = 0;
             if (modeBits[3] == '1') { 
-                std::cout << "NUMERIC\n";
                 countBits = getCountBits(decodeStr, MODE_NUMERIC, idx);
-                std::cout << "countBits : " << countBits << std::endl;
+                len += countBits;
                 idx += 10;
 
-                int lastBits = 10;
-                if (countBits % 3 == 2) {
-                    lastBits = 7;
-                } else if (countBits % 3 == 1) {
-                    lastBits = 4;
-                }
-
-                int loopCnt = countBits / 3 + 1;
                 std::string numericString;
-                while (loopCnt--) {
-                    int currentBits = (loopCnt == 0) ? lastBits : 10;
+                while (countBits >= 3) {
+                    numericString = decodeStr.substr(idx, 10);
+                    idx += 10;
 
-                    numericString = decodeStr.substr(idx, currentBits);
-                    idx += currentBits;
-
-                    int cur = 1;
-                    int sum = 0;
-                    for (int i = currentBits - 1; i >= 0; i--) {
-                        if (numericString[i] == '1')
-                            sum += cur;
-                        cur *= 2;
-                    }
-                    result += std::to_string(sum);  
-                    len += std::to_string(sum).length();  
+                    sum = getDecimal(numericString);
+                    result += (sum / 100) + '0';
+                    result += ((sum % 100) / 10) + '0';
+                    result += (sum % 10) + '0';
+                    countBits -= 3;
                 }
-                std::cout << "RESULT : " << result << std::endl;
+                if (countBits == 2) {
+                    numericString = decodeStr.substr(idx, 7);
+                    idx += 7;
+
+                    sum = getDecimal(numericString);
+                    result += (sum / 10) + '0';
+                    result += (sum % 10) + '0';
+                }
+                if (countBits == 1) {
+                    numericString = decodeStr.substr(idx, 4);
+                    idx += 4;
+
+                    sum = getDecimal(numericString);
+                    result += (sum % 10) + '0';
+                }
             } else if (modeBits[2] == '1') {
-                std::cout << "ALPHANUMER\n";
                 countBits = getCountBits(decodeStr, MODE_ALPHA_NUMERIC, idx);
-                std::cout << "countBits : " << countBits << std::endl;
+                len += countBits;
                 idx += 9;
 
-                int lastBits = (countBits % 2) ? 6 : 11;
-
-                int loopCnt = countBits / 2 + 1;
                 std::string alphaNumericString;
-                while (loopCnt--) {
-                    int currentBits = (loopCnt == 0) ? lastBits : 11;
+                while (countBits >= 2) {
+                    alphaNumericString = decodeStr.substr(idx, 11);
+                    idx += 11;
 
-                    std::cout << "currentBits : " << currentBits << std::endl;
-                    alphaNumericString = decodeStr.substr(idx, currentBits);
-                    idx += currentBits;
-
-                    int cur = 1;
-                    int sum = 0;
-                    for (int i = currentBits - 1; i >= 0; i--) {
-                        if (alphaNumericString[i] == '1')
-                            sum += cur;
-                        cur *= 2;
-                    }
-
-                    std::cout << "ALPHA sum : " << sum << std::endl;
-                    if (sum / 45) {
-                        result += ALPHA_NUMERIC_STR[sum / 45];
-                        len++;
-                    }
+                    sum = getDecimal(alphaNumericString);
+                    result += ALPHA_NUMERIC_STR[sum / 45];
                     result += ALPHA_NUMERIC_STR[sum % 45];
-                    len++;
+                    countBits -= 2;
                 }
-                std::cout << "RESULT : " << result << std::endl;
+                if (countBits == 1) {
+                    alphaNumericString = decodeStr.substr(idx, 6);
+                    idx += 6;
+
+                    sum = getDecimal(alphaNumericString);
+                    result += ALPHA_NUMERIC_STR[sum % 45];
+                }
             } else if (modeBits[1] == '1') {
-                std::cout << "8BITBYTE\n";
                 countBits = getCountBits(decodeStr, MODE_8_BIT_BYTE, idx);
-                std::cout << "countBits : " << countBits << std::endl;
+                len += countBits;
                 idx += 8;
 
-                int loopCnt = countBits;
-                int currentBits = 8;
                 std::string bitString;
-                while (loopCnt--) {
-                    bitString = decodeStr.substr(idx, currentBits);
-                    idx += currentBits;
+                while (countBits) {
+                    bitString = decodeStr.substr(idx, 8);
+                    idx += 8;
 
-                    int cur = 1;
-                    int sum = 0;
-                    for (int i = currentBits - 1; i >= 0; i--) {
-                        if (bitString[i] == '1')
-                            sum += cur;
-                        cur *= 2;
-                    }
-
-                    if (sum < 0x20 || sum > 0x7e)  {
-                        result += "\\";
-                        if (sum / 16) {
-                            if (sum / 16 < 10)
-                                result += sum / 16 + '0';
-                            else
-                                result += sum / 16 - 10 + 'A';
-                        }
-                        if (sum % 16 < 10)
-                            result += sum % 16 + '0';
-                        else
-                            result += sum % 16 - 10 + 'A';
-                        len++;
-                    } else {
+                    sum = getDecimal(bitString);
+                    if (sum >= 0x20 && sum <= 0x7e)
                         result += (char)sum;
-                        len++;
+                    else {
+                        result += '\\';
+
+                        int tmp = sum / 16;
+                        result += (tmp < 10) ? (char)(tmp + '0') : (char)(tmp - 10 + 'A');
+
+                        tmp = sum % 16;
+                        result +=(tmp < 10) ? (char)(tmp + '0') : (char)(tmp - 10 + 'A');
                     }
+                    countBits--;
                 }
             } else if (modeBits[0] == '1') {
-                std::cout << "KANJI\n";
                 countBits = getCountBits(decodeStr, MODE_KANJI, idx);
-                std::cout << "countBits : " << countBits << std::endl;
+                len += countBits;
                 idx += 8;
 
-                int loopCnt = countBits;
-                int currentBits = 13;
                 std::string bitString;
-                while (loopCnt--) {
-                    bitString = decodeStr.substr(idx, currentBits);
-                    idx += currentBits;
+                while (countBits) {
+                    result += '#';
+                    bitString = decodeStr.substr(idx, 1);
+                    idx += 1;
 
-                    int cur = 1;
-                    int sum = 0;
-                    for (int i = currentBits - 1; i >= 0; i--) {
-                        if (bitString[i] == '1')
-                            sum += cur;
-                        cur *= 2;
-                    }
+                    result += bitString[0];
+                    for (int i = 0; i < 3; i++) {
+                        bitString = decodeStr.substr(idx, 4);
+                        idx += 4;
 
-                    std::cout << "sum : " << sum << std::endl;
-                    result += "#";
-                    std::string tmp = "";
-                    while (sum > 0) {
-                        if (sum % 16 < 10)
-                            tmp += sum % 16 + '0';
-                        else
-                            tmp += sum / 16 - 10 + 'A';
-                        sum /= 16;
-                    }
+                        sum = getDecimal(bitString);
 
-                    for (size_t i = tmp.length() - 1; i >= 0; i--) {
-                        result += tmp[i];
+                        int tmp = sum % 16;
+                        result += (tmp < 10) ? (char)(tmp + '0') : (char)(tmp - 10 + 'A');
                     }
-                    len++;
+                    countBits--;
                 }
             } else {
-                std::cout << "NONE\n";
                 break;
             }
         }
-
         std::cout << len << " " << result << std::endl;
     }
     return 0;
