@@ -26,13 +26,13 @@ int main() {
     }
 
     ld lo = 0;
-    ld hi = 1;
-    while (lo + 1e-6 < hi) {
+    ld hi = 1 + 1e-6;
+    while (lo + 1e-9 < hi) {
         ld mid = (lo + hi) / 2;
-        std::cout << "mid: " << mid << std::endl;
+        // std::cout << "mid: " << mid << std::endl;
         for (int i = 0; i < N; i++) {
             pq.push(std::make_pair(mid * Q[i] - P[i], i));
-            std::cout << "mid * Q[i] - P[i]: " << mid * Q[i] - P[i] << std::endl;
+            // std::cout << "mid * Q[i] - P[i]: " << mid * Q[i] - P[i] << std::endl;
         }
 
         ld sum = 0;
@@ -45,7 +45,6 @@ int main() {
             pq.pop();
         }
 
-        std::cout << "sum: " << sum << std::endl;
         if (sum > 0)
             hi = mid;
         else
