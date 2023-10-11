@@ -33,7 +33,7 @@ int main() {
     std::cin >> K;
 
     ll lo = 0;
-    ll hi = 2e9; // 대충 1e12부터 테스트해서 max찾음 : 25502363010
+    ll hi = 2e9;
     while (lo + 1 < hi) {
         ll mid = (lo + hi) / 2;
 
