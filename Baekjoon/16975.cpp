@@ -2,7 +2,7 @@
 
 using ll = long long;
 
-ll propagate[500000];
+ll propagate[5000000];
 ll num[1000001];
 int N;
 
