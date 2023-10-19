@@ -1,6 +1,7 @@
 #include <iostream>
 
 using ll = long long;
+
 int main() {
     ll N;
     std::cin >> N;
