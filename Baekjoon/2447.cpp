@@ -26,12 +26,10 @@ int main() {
     cin >> N;
     solve(N, 0, 0);
     for (int i = 0; i < N; i++) {
-        cout << "|";
         for (int j = 0; j < N; j++) {
             if (!arr[i][j]) cout << " ";
             else cout << arr[i][j];
         }
-        cout << "|" << endl;
     }
     return 0;
 }
