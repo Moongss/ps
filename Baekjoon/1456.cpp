@@ -30,11 +30,10 @@ int main() {
         if (!sieve[i]) continue;
         if (i * i > B) break;
 
-        ll tmp = i * i;
-        while (tmp <= B) {
-            if (tmp >= A) sum++;
-            if (tmp > LLONG_MAX / i) break;
+        ll tmp = i;
+        while (tmp <= B && tmp <= LLONG_MAX / i) {
             tmp *= i;
+            if (A <= tmp && tmp <= B) sum++;
         }
     }
     cout << sum << endl;
