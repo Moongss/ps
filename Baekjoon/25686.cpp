@@ -25,8 +25,7 @@ void solve(int s, int e, int d) {
 
 int main() {
     fastio;
-    cin >> N;
-    solve(1, N, 1);
+    cin >> N; solve(1, N, 1);
     cout << endl;
     return 0;
 }
