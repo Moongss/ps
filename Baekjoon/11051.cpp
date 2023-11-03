@@ -8,35 +8,19 @@ using ld = long double;
 
 ll N, K;
 ll P = 10007;
-
-ll factorial(ll num) {
-    ll result = 1;
-
-    for (int i = 1; i <= num; i++) {
-        result *= i;
-        result %= P;
-    }
-    return result;
-}
-
-ll power(ll num, ll x) {
-    if (x == 0)
-        return 1;
-    else if (x == 1)
-        return num % P;
-    else {
-        ll tmp = power(num, x / 2) % P;
-        if (x % 2)
-            return (tmp * tmp % P) * (num % P) % P;
-        else
-            return tmp * tmp % P;
-    }
-}
+int dp[1001][1001] = {0, };
 
 int main() {
     fastio;
     cin >> N >> K;
 
-    cout << (factorial(N) % P) * power((factorial(K) * factorial(N - K) % P), P - 2) % P << endl;
+    for (int i = 1; i <= N; i++) {
+        for (int j = 0; j <= i; j++) {
+            if (j == 0 || j == i) {dp[i][j] = 1; continue;}
+            dp[i][j] = (dp[i - 1][j - 1] + dp[i - 1][j]) % P;
+        }
+    }
+
+    cout << dp[N][K] << endl;
     return 0;
 }
