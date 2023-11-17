@@ -1,13 +1,13 @@
 #include <bits/stdc++.h>
 #define endl "\n"
 #define fastio cin.tie(0)->sync_with_stdio(0)
-#define MOD 1000000007
 
 using namespace std;
 using ll = long long;
 using ld = long double;
 
-const ll SZ = 1 << 19;
+const ll MOD = 1000000007;
+const ll SZ = 1 << 20;
 ll visited[SZ << 1];
 ll dist[SZ << 1];
 
@@ -47,8 +47,8 @@ int main() {
         ll x; cin >> x;
         ll curDist = 0;
         if (i > 1) {
-            curDist += ((SumVisit(0, x - 1) * x) % MOD - SumDist(0, x - 1) % MOD) % MOD;
-            curDist += (SumDist(x + 1, SZ) % MOD - (SumVisit(x + 1, SZ) * x % MOD)) % MOD;
+            curDist += (SumVisit(0, x - 1) * x - SumDist(0, x - 1)) % MOD;
+            curDist += (SumDist(x + 1, SZ) - SumVisit(x + 1, SZ) * x) % MOD;
             ans = ((ans % MOD) * (curDist % MOD)) % MOD;
         }
         SetVisit(x, visited[x + SZ] + 1);
