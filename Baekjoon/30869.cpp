@@ -37,20 +37,15 @@ int main() {
             int t = edge.second.first;
             int g = edge.second.second;
 
-            if (curTime % g == 0) {
-                if (dp[next] > dp[cur] + t) {
-                    dp[next] = dp[cur] + t;
-                    pq.push({dp[next], {next, curK}});
-                }
-            } else {
-                if (dp[next] > dp[cur] + t + g - (curTime % g)) {
-                    dp[next] = dp[cur] + t + g - (curTime % g);
-                    pq.push({dp[next], {next, curK}});
-                }
-                if (curK < K && dp[next] > dp[cur] + t) {
-                    dp[next] = dp[cur] + t;
-                    pq.push({dp[next], {next, curK + 1}});
-                }
+            int waitTime = ((dp[cur] + g - 1) / g) * g;
+            if (dp[next] > waitTime + t) {
+                dp[next] = waitTime + t;
+                pq.push({dp[next], {next, curK}});
+            }
+
+            if (curK < K && dp[next] > dp[cur] + t) { //if waitTime == 0, don't run this code
+                dp[next] = dp[cur] + t;
+                pq.push({dp[next], {next, curK + 1}});
             }
         }
     }
