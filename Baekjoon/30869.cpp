@@ -6,13 +6,18 @@ using namespace std;
 using ll = long long;
 using ld = long double;
 
-int dp[501];
+int dp[501][501];
 vector<pair<int, pair<short, short>>> adj[501];
 priority_queue<pair<int, pair<short, short>>, 
-            vector<pair<int, pair<short, short>>>> pq;
+            vector<pair<int, pair<short, short>>>,
+            greater<pair<int, pair<short, short>>>> pq;
 
 int main() {
     fastio;
+
+    // std::chrono::system_clock::time_point start =
+    // std::chrono::system_clock::now();
+
     int N, M, K;
     cin >> N >> M >> K;
     for (int i = 0; i < M; i++) {
@@ -21,40 +26,56 @@ int main() {
         adj[s].push_back({e, {t, g}});
     }
 
-    memset(dp, 0x3f3f3f3f, sizeof(dp));
+    for (int i = 0; i <= N; i++)
+        for (int j = 0; j <= K; j++)
+            dp[i][j] = 0x3f3f3f3f;
+
     pq.push({0, {1, 0}});
-    dp[1] = 0;
+    dp[1][0] = 0;
     while (!pq.empty()) {
         int curTime = pq.top().first;
         int cur = pq.top().second.first;
         int curK = pq.top().second.second;
         pq.pop();
 
-        if (cur == N) continue;
-        if (curTime > dp[cur]) continue;
+        if (cur == N) break;
+        if (curTime > dp[cur][curK]) continue;
         for (auto &edge : adj[cur]) {
             int next = edge.first;
             int t = edge.second.first;
             int g = edge.second.second;
 
-            if (curTime % g == 0) {
-                if (dp[next] > dp[cur] + t) {
-                    dp[next] = dp[cur] + t;
-                    pq.push({dp[next], {next, curK}});
-                }
-            } else {
-                if (dp[next] > dp[cur] + t + g - (curTime % g)) {
-                    dp[next] = dp[cur] + t + g - (curTime % g);
-                    pq.push({dp[next], {next, curK}});
-                }
-                if (curK < K && dp[next] > dp[cur] + t) {
-                    dp[next] = dp[cur] + t;
-                    pq.push({dp[next], {next, curK + 1}});
-                }
+            // 바로 탑승
+            if (curK < K && dp[next][curK + 1] > curTime + t) {
+                dp[next][curK + 1] = curTime + t;
+                pq.push({dp[next][curK + 1], {next, curK + 1}});
+            }
+
+            // 기다리고 탑승
+            int waitTime = ((curTime + g - 1) / g) * g;
+            if (dp[next][curK] > waitTime + t) {
+                dp[next][curK] = waitTime + t;
+                pq.push({dp[next][curK], {next, curK}});
             }
         }
     }
 
-    cout << (dp[N] == 0x3f3f3f3f ? -1 : dp[N]) << endl;
+
+    // for (int i = 1; i <= N; i++) {
+    //     for (int j = 0; j <= K; j++) {
+    //         cout << dp[i][j] << " ";
+    //     }
+    //     cout << endl;
+    // }
+    int ans = 0x3f3f3f3f;
+    for (int i = 0; i <= K; i++) {
+        ans = min(ans, dp[N][i]);
+    }
+
+    cout << (ans == 0x3f3f3f3f ? -1 : ans) << endl;
+
+    // std::chrono::duration<double> sec =
+    // std::chrono::system_clock::now() - start;
+    // std::cout << "Test() 함수를 수행하는 걸린 시간(초) : " << sec.count() << " seconds" << endl;
     return 0;
 }
