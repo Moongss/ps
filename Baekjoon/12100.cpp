@@ -13,12 +13,11 @@ int arr[21][21];
 
 int main() {
     fastio;
-    
+     //WIP
     cin >> N;
     for (int i = 0; i < N; i++) 
         for (int j = 0; j < N; j++) 
             cin >> arr[i][j];
-    
     int ans = 0;
     
     cout << ans << endl;
