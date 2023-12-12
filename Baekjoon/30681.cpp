@@ -67,24 +67,28 @@ int main() {
         s.push_back(p[next++]);
     }
 
+    if (s.size() == 2) {
+        cout << fixed << setprecision(6) << sqrt(dist(s[0], s[1])) << endl;
+        return 0;
+    }
+    
+    int N = s.size();
     ld ans = 1e18;
-    ld tmp = sqrt(dist(s[0], s[1]) * 1.0);
-    int right = 1;
-    for (int i = 0; i < s.size(); i++) {
-        int left = i;
-        int next_l = (i + 1) % s.size();
-        tmp -= sqrt(dist(s[next_l], s[left]) * 1.0);
-        while (left != right) {
-            int next_r = (right + 1) % s.size();
-            Point lvector = {s[next_l].x - s[left].x, s[next_l].y - s[left].y};
-            Point rvector = {s[next_r].x - s[right].x, s[next_r].y - s[right].y};
+    ld tmp = 0;
+    for (int i = 0, j = 0; i < N; i++) {
+        int next_i = (i + 1) % N;
+        while (i != (j + 1) % N) {
+            int next_j = (j + 1) % N;
+            Point lvector = {s[next_i].x - s[i].x, s[next_i].y - s[i].y};
+            Point rvector = {s[next_j].x - s[j].x, s[next_j].y - s[j].y};
 
             if (ccw(Point(0, 0), lvector, rvector) >= 0) {
-                tmp += sqrt(dist(s[right], s[next_r]) * 1.0);
-                right = next_r;
+                tmp += sqrt(dist(s[j], s[next_j]));
+                j = next_j;
             }
             else break;
         }
+        tmp -= sqrt(dist(s[i], s[next_i]));
         ans = min(ans, tmp);
     }
     printf("%.6Lf\n", ans);
