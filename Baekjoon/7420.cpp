@@ -72,6 +72,6 @@ int main() {
         int next = (cur + 1) % cv.size();
         ans += sqrt(dist(p[cv[cur]], p[cv[next]])); //hypot 
     }
-    cout << setprecision(0) << fixed << ans << endl;
+    cout << setprecision << fixed << ans << endl;
     return 0;
 }
