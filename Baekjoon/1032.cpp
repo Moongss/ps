@@ -20,7 +20,6 @@ int main() {
             if (result[j] != s[j]) result[j] = '?';
         }
     }
-    vector<string> v(N);
-
+    cout << result << endl;
     return 0;
 }
