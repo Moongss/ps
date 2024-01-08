@@ -33,6 +33,7 @@ void compress() {
         for (int j = 0; j < 4; j++) {
             compressMapInfo[i][j] = {x[i], y[j]};
         }
+        // cout << endl;
     }
 }
 
