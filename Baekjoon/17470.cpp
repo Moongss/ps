@@ -33,7 +33,6 @@ void compress() {
         for (int j = 0; j < 4; j++) {
             compressMapInfo[i][j] = {x[i], y[j]};
         }
-        // cout << endl;
     }
 }
 
@@ -255,6 +254,14 @@ int main() {
         else
             rotation(operate, N, M, isCompressed);
     }
+
+    // for (int i = 0; i < 4; i++) {
+    //     for (int j = 0; j < 4; j++) {
+    //         cout << "<" << compressMapInfo[i][j].first << " "  << compressMapInfo[i][j].second << ">";
+    //         cout << " ";
+    //     }
+    //     cout << endl;
+    // }
     print(isCompressed);
     return 0;
 }
