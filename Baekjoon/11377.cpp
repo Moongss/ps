@@ -44,8 +44,8 @@ int main() {
     for (int i = 0; i < P; i++) {
         int a, b; cin >> a >> b;
 
-        capacity[a * 2][b * 2 - 1] = 42424242;
-        capacity[b * 2][a * 2 - 1] = 42424242; //bidirectional...
+        capacity[a * 2][b * 2 - 1] = 1;
+        capacity[b * 2][a * 2 - 1] = 1; //bidirectional...
 
         //out(a) -> in(b)
         adj[a * 2].push_back(b * 2 - 1);
