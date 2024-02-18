@@ -86,33 +86,18 @@ int main() {
             //             T  F    T     F        T  F      T     F
             // 1 1 6 6 -> {1, 2}, {2001, 2002}, {11, 12}, {2011, 2012}
             // 6 6 1 1 -> {11, 12}, {2011, 2012}, {1, 2}, {2001, 2002}
+            adj[x_false[0]].push_back(x_true[1]); //notA -> C
+            adj[x_false[1]].push_back(x_true[0]); //notC -> A
 
-            if (A == C) { //x축 같으니 y 바꾸기
-                adj[x_false[0]].push_back(x_true[1]); //notA -> C
-                adj[x_false[1]].push_back(x_true[0]); //notC -> A  
-            } else if (B == D) { //이하동일
-                adj[y_false[1]].push_back(y_true[0]); //notD -> B
-                adj[y_false[0]].push_back(y_true[1]); //notB -> D
-            } else {
-                adj[x_false[0]].push_back(x_true[1]); //notA -> C
-                adj[x_false[1]].push_back(x_true[0]); //notC -> A
+            adj[x_false[0]].push_back(y_true[0]); //notA -> B
+            adj[y_false[0]].push_back(x_true[0]); //notB -> A
 
-                adj[x_false[0]].push_back(y_true[0]); //notA -> B
-                adj[y_false[0]].push_back(x_true[0]); //notB -> A
+            adj[y_false[1]].push_back(y_true[0]); //notD -> B
+            adj[y_false[0]].push_back(y_true[1]); //notB -> D
 
-                adj[y_false[1]].push_back(y_true[0]); //notD -> B
-                adj[y_false[0]].push_back(y_true[1]); //notB -> D
-
-                adj[y_false[1]].push_back(x_true[1]); //notD -> C
-                adj[x_false[1]].push_back(y_true[1]); //notC -> D
-            }
+            adj[y_false[1]].push_back(x_true[1]); //notD -> C
+            adj[x_false[1]].push_back(y_true[1]); //notC -> D
         }
-
-        // for (int i = 1; i <= 4000; i++) {
-        //     for (auto e : adj[i]) {
-        //         cout << i << " " << e << endl;
-        //     }
-        // }
 
         for (int i = 0; i <= 4000; i++) {
             if (!parent[i]) {
