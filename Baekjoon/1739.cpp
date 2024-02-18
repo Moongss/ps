@@ -60,17 +60,13 @@ int main() {
 
         while (K--) {
             int A, B, C, D; cin >> A >> B >> C >> D;
-            
 
-            //x-axis: 1 ~ 2000
             int x_true[2] = {A * 2 - 1, C * 2 - 1};
             int x_false[2] = {A * 2, C * 2};
-
-            //y-axis: 2001 ~ 4000
+            
             int y_true[2] = {B * 2 - 1 + 2000, D * 2 - 1 + 2000};
             int y_false[2] = {B * 2 + 2000, D * 2 + 2000};
 
-            if (A == C && B == D) continue;
             if (B > D) {
                 swap(x_true[0], x_false[0]);
                 swap(x_true[1], x_false[1]);
@@ -80,12 +76,6 @@ int main() {
                 swap(y_true[1], y_false[1]);
             }
 
-            //(A & D) | (B & C)
-            //(A & B) | (A & C) | (B & D) | (C & D)
-
-            //             T  F    T     F        T  F      T     F
-            // 1 1 6 6 -> {1, 2}, {2001, 2002}, {11, 12}, {2011, 2012}
-            // 6 6 1 1 -> {11, 12}, {2011, 2012}, {1, 2}, {2001, 2002}
             adj[x_false[0]].push_back(x_true[1]); //notA -> C
             adj[x_false[1]].push_back(x_true[0]); //notC -> A
 
@@ -106,8 +96,8 @@ int main() {
         }
 
         bool flag = true;
-        for (int i = 1; i <= 4000; i+=2) {
-            if (sccId[i] == sccId[i + 1]) { //not SCC_ID
+        for (int i = 1; i < 4000; i+=2) {
+            if (sccId[i] == sccId[i + 1]) {
                 flag = false;
                 break;
             }
