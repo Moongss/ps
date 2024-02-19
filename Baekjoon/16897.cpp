@@ -12,22 +12,6 @@ int T;
 
 int main() {
     fastio;
-
-    // int k = 1; k++;
-    // for (int i = 1; i <= 20; i++) {
-    //     for (int j = 1; j <= 20; j++) {
-    //         ll res = (i & 1) ^ (j & 1);
-    //         if ((i % k == 0 && j >= i) || (j % k == 0 && i >= j)) res += 2;
-
-    //         if (k > 2) {
-    //             if (!((i % k == 0 && j >= i) || (j % k == 0 && i >= j)))
-    //                 res ^= (min(i, j) / k) % 2;
-    //         }
-    //         cout << res << " ";
-    //     }
-    //     cout << endl;
-    // }
-
     cin >> T;
     while (T--) {
         ll K, N, M; cin >> K >> N >> M; K++;
