@@ -8,7 +8,7 @@ using ld = long double;
 using pii = pair<int, int>;
 using pll = pair<ll, ll>;
 
-int N, M, K;
+int N, M;
 int capacity[2020][2020];
 int flow[2020][2020];
 int prevNode[2020];
@@ -42,17 +42,12 @@ void bfs(int s, int e) {
 int main() {
     fastio;
     
-    cin >> N >> M >> K;
+    cin >> N >> M;
 
     int s = 0;
-    int dummy = 2002;
     int e = 2001;
-
-    setCapacity(s, dummy, K);
-    for (int i = 1; i <= N; i++) {
+    for (int i = 1; i <= N; i++)
         setCapacity(s, i, 1);
-        setCapacity(dummy, i, 1);
-    }
     for (int i = 1; i <= M; i++)
         setCapacity(i + 1000, e, 1);
 
