@@ -9,72 +9,49 @@ using pii = pair<int, int>;
 using pll = pair<ll, ll>;
 
 int T, N, M;
-vector<int> adj[2020];
-int c[2020][2020];
-int f[2020][2020];
-int p[2020];
+vector<int> adj[1010];
+bool visited[1010];
+int R[1010];
 
 void init() {
-    for (auto x : adj) {
+    for (auto &x : adj) {
         x.clear();
     }
-    memset(c, 0, sizeof(c));
-    memset(f, 0, sizeof(f));
+    // for (int i = 0; i < 1010; i++) {
+    //     if (adj[i].size()) cout << adj[i].size() << endl;
+    // }
+    memset(R, -1, sizeof(R));
+    memset(visited, false, sizeof(visited));
 }
 
-void addEdge(int u, int v, int cap) {
-    c[u][v] = cap;
+bool solve(int cur) {
+    visited[cur] = true;
 
-    adj[u].push_back(v);
-    adj[v].push_back(u);
-}
-
-void bfs(int s, int e) {
-    memset(p, -1, sizeof(p));
-
-    queue<int> q; q.push(s);
-    while (!q.empty()) {
-        int cur = q.front(); q.pop();
-
-        for (auto nxt : adj[cur]) {
-            if (p[nxt] != -1) continue;
-            if (c[cur][nxt] - f[cur][nxt] <= 0) continue;
-
-            p[nxt] = cur;
-            q.push(nxt);
-            if (nxt == e) return;
+    for (auto nxt : adj[cur]) {
+        if (R[nxt] == -1 || (!visited[R[nxt]] && solve(R[nxt]))) {
+            R[nxt] = cur;
+            return true;
         }
     }
+    return false;
 }
 
 int main() {
     fastio;
     
     cin >> T;
-    int s = 2001, e = 2002;
     while (T--) {
         init();
         cin >> N >> M;
         for (int i = 0; i < M; i++) {
-            int u, v; cin >> u >> v; v += N;
-            addEdge(u, v, 1);
-        }
-
-        for (int i = 0; i < N; i++) {
-            addEdge(s, i, 1);
-            addEdge(i + N, e, 1);
+            int u, v; cin >> u >> v;
+            adj[u].push_back(v);
         }
 
         int total = 0;
-        while (true) {
-            bfs(s, e);
-            if (p[e] == -1) break;
-
-            for (int i = e; i != s; i = p[i]) {
-                f[p[i]][i]++;
-                f[i][p[i]]--;
-            }
-            total++;
+        for (int i = 0; i < N; i++) {
+            memset(visited, false, sizeof(visited));
+            if (solve(i)) total++;
         }
         cout << total << endl;
     }
