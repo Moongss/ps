@@ -12,7 +12,7 @@ int N, K, X;
 int prevNode[20];
 int flow[20][20];
 int cost[20][20];
-int score[16];
+vector<pii> score;
 vector<int> adj[20];
 vector<int> result[20];
 
@@ -54,12 +54,17 @@ int main() {
     }
 
     for (int i = 1; i <= N; i++) { //정렬해야됨
-        cin >> score[i];
+        int x; cin >> x;
+        score.push_back({i, x});
     }
+
+    sort(score.begin(), score.end(), [](pii &a, pii &b) {
+        return (a.second > b.second);
+    });
 
     int s = 0, e = 19;
     for (int i = 1; i <= N; i++)
-        addEdge(s, i, 0x3f3f3f3f);
+        addEdge(s, score[i].first, 0x3f3f3f3f);
     for (int i = 1; i <= K; i++) {
         addEdge(N + i, e, X);
     }
