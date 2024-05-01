@@ -11,3 +11,10 @@
 *.DS_Store
 
 *test.cpp
+
+*in.txt
+*out.txt
+
+*input
+
+*output
