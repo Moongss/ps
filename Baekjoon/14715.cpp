@@ -41,7 +41,10 @@ int main() {
     }
     if (N > 1) cnt++;
 
-    int result = log2(cnt);
-    cout << result << endl;
+    if (log2(cnt) == (int)log2(cnt)) {
+        cout << (int)log2(cnt) << endl;
+    } else {
+        cout << (int)ceil(log2(cnt)) << endl;
+    }
     return 0;
 }
