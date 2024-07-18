@@ -23,5 +23,14 @@ const ll inf = (1LL << 63) - 1;
 int main() {
     fastio;
     
+    int N, M; cin >> N >> M;
+
+    for (int i = 1; i <= M; i++) {
+        cout << 0 << " " << i << endl;
+    }
+
+    for (int i = M; i < N - 1; i++) {
+        cout << i << " " << i + 1 << endl;
+    }
     return 0;
 }
