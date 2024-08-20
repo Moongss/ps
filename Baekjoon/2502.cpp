@@ -20,27 +20,23 @@ using pll = pair<ll, ll>;
 
 const ll inf = (1LL << 63) - 1;
 
-int N, K;
-int dp[50001];
-
+int dp[31][2];
 int main() {
     fastio;
     
-    cin >> N; vector<int> v(N); for (auto &i : v) cin >> i;
-    cin >> K;
+    int D, K; cin >> D >> K;
 
-    memset(dp, 0x3f, sizeof(dp)); dp[0] = 0;
-    for (auto &e : v) {
-        for (int i = e; i <= 50000; i++) {
-            dp[i] = min(dp[i], dp[i - e] + 1);
-        }
+    dp[1][0] = dp[2][1] = 1;
+    for (int i = 3; i <= D; i++) {
+        dp[i][0] = dp[i - 1][0] + dp[i - 2][0];
+        dp[i][1] = dp[i - 1][1] + dp[i - 2][1];
     }
 
-    for (int i = 1;;i++) {
-        if (dp[i] > K) {
-            cout << (i % 2 ? "jjaksoon" : "holsoon") << " win at " << i << endl;
-            break;
-        }
+    for (int i = 1; i < K; i++) {
+        if ((K - dp[D][0] * i) % dp[D][1] == 0) {
+            cout << i << endl << (K - dp[D][0] * i) / dp[D][1] << endl;
+            return 0;
+        } 
     }
     return 0;
 }

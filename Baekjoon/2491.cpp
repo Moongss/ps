@@ -20,27 +20,32 @@ using pll = pair<ll, ll>;
 
 const ll inf = (1LL << 63) - 1;
 
-int N, K;
-int dp[50001];
+int N;
+vector<int> v;
 
 int main() {
     fastio;
     
-    cin >> N; vector<int> v(N); for (auto &i : v) cin >> i;
-    cin >> K;
+    cin >> N;
+    v.resize(N); for (auto &i : v) cin >> i;
 
-    memset(dp, 0x3f, sizeof(dp)); dp[0] = 0;
-    for (auto &e : v) {
-        for (int i = e; i <= 50000; i++) {
-            dp[i] = min(dp[i], dp[i - e] + 1);
+    int mmax = -1;
+    int cnt = 1;
+    int cnt2 = 1;
+    for (int i = 1; i < N; i++) {
+        if (v[i] >= v[i - 1]) cnt++;
+        else {
+            mmax = max(mmax, cnt);
+            cnt = 1;
+        }
+
+        if (v[i] <= v[i - 1]) cnt2++;
+        else {
+            mmax = max(mmax, cnt2);
+            cnt2 = 1;
         }
     }
-
-    for (int i = 1;;i++) {
-        if (dp[i] > K) {
-            cout << (i % 2 ? "jjaksoon" : "holsoon") << " win at " << i << endl;
-            break;
-        }
-    }
+    mmax = max(mmax, max(cnt, cnt2));
+    cout << mmax << endl;
     return 0;
 }
