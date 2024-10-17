@@ -1,72 +1,63 @@
-#include <algorithm>
-#include <iostream>
-#include <queue>
+#include <bits/stdc++.h>
+#define endl "\n"
+#define fastio cin.tie(0)->sync_with_stdio(0)
+#define x first
+#define y second
+
+using namespace std;
+using pii = pair<int, int>;
 
 int N, M;
-int map[1000][1000];
-int result[1000][1000];
-bool visit[1000][1000];
-std::pair<int, int> start;
+int arr[1010][1010];
+int ans[1010][1010];
+bool visited[1010][1010];
 
-int dx[4] = {1, -1, 0, 0};
-int dy[4] = {0, 0, 1, -1};
+int dx[] = {0, 0, 1, -1};
+int dy[] = {1, -1, 0, 0};
 
-void solve() {
-    std::queue<std::pair<int, int>> q;
+void solve(pii s) {
+    queue<pii> q; q.push(s);
+    visited[s.x][s.y] = true;
 
-    q.push(start);
-    visit[start.first][start.second] = true;
-    result[start.first][start.second] = 0;
+    ans[s.x][s.y] = 0;
     while (!q.empty()) {
+        pii cur = q.front(); q.pop();
 
-        std::pair<int, int> elem = q.front();
-        q.pop();
-    
-        int x = elem.first;
-        int y = elem.second;
         for (int i = 0; i < 4; i++) {
-            int newX = x + dx[i];
-            int newY = y + dy[i];
+            int nx = cur.x + dx[i];
+            int ny = cur.y + dy[i];
 
-            if (newX < 0 || newX >= N || newY < 0 || newY >= M)
-                continue;
-            if (visit[newX][newY])
-                continue;
-            if (map[newX][newY] == 0) {
-                result[newX][newY] = 0;
-                continue;
-            }
+            if (nx < 0 || nx >= N || ny < 0 || ny >= M) continue;
+            if (visited[nx][ny] || arr[nx][ny] == 0) continue;
 
-            visit[newX][newY] = true;
-            result[newX][newY] = result[x][y] + 1;
-            q.push({newX, newY});
+            visited[nx][ny] = true;
+            ans[nx][ny] = ans[cur.x][cur.y] + 1;
+            q.push({nx, ny});
         }
     }
 }
 
 int main() {
-    std::cin >> N >> M;
+    fastio;
+    
+    cin >> N >> M;
+    pii start;
 
+    memset(ans, -1, sizeof(ans));
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < M; j++) {
-            std::cin >> map[i][j];
-            result[i][j] = -1;
-            if (map[i][j] == 0)
-                result[i][j] = 0;
-            if (map[i][j] == 2)
-                start = {i, j};
+            cin >> arr[i][j];
+            if (arr[i][j] == 0) ans[i][j] = 0;
+            if (arr[i][j] == 2) start = {i, j};
         }
     }
-
-    // bfs ÂßÂß
-    solve();
-
+        
+    solve(start);
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < M; j++) {
-            std::cout << result[i][j] << " ";
+            cout << ans[i][j] << " ";
         }
-        std::cout << std::endl;
+        cout << endl;
     }
-
     return 0;
 }
