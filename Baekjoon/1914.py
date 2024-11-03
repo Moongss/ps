@@ -16,7 +16,7 @@ def solve(cur, start_point, end_point):
         solve(cur + 1, mid_point, end_point)
 
 
-N = int(input())
+N = int(input())    
 
 print_move_cnt()
 if N <= 20:
