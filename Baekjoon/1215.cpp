@@ -26,25 +26,22 @@ using pll = pair<ll, ll>;
 int main() {
     fastio;
     
-    int N; cin >> N;
+    ll n, k; cin >> n >> k;
+    ll ret = 0;
 
-    vector<pii> v(N+1);
-    for (int i = 1; i <= N; i++) {
-        cin >> v[i].x >> v[i].y;
+    if (n > k) ret = (n - k) * k, n = k;
+
+    ll s = 1;
+    ret += k * n; // S - k
+    while (s <= n) {
+        ll num = k / s; // 몫만큼 곱해서 뺴야됨 그게 나머지가됨
+        ll e = k / num; // [s, e] -> num = cnt
+        if (e > n) e = n;
+
+        ret -= num * (e - s + 1) * (s + e) / 2;
+        s = e + 1;
     }
 
-    int ret = -1;
-    for (int i = 1; i <= N; i++) {
-        int cnt = 0;
-        for (int j = 1; j <= N; j++) {
-            if ((v[j].x <= i && i <= v[j].y)) {
-                cnt++;
-            }
-        }
-        if (cnt == i) {
-            ret = max(ret, cnt);
-        }
-    }       
     cout << ret << endl;
     return 0;
 }

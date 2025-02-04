@@ -27,24 +27,6 @@ int main() {
     fastio;
     
     int N; cin >> N;
-
-    vector<pii> v(N+1);
-    for (int i = 1; i <= N; i++) {
-        cin >> v[i].x >> v[i].y;
-    }
-
-    int ret = -1;
-    for (int i = 1; i <= N; i++) {
-        int cnt = 0;
-        for (int j = 1; j <= N; j++) {
-            if ((v[j].x <= i && i <= v[j].y)) {
-                cnt++;
-            }
-        }
-        if (cnt == i) {
-            ret = max(ret, cnt);
-        }
-    }       
-    cout << ret << endl;
+    for (int i = 0; i < N; i++) cout << "a";
     return 0;
 }

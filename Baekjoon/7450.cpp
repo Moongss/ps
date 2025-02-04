@@ -26,25 +26,25 @@ using pll = pair<ll, ll>;
 int main() {
     fastio;
     
-    int N; cin >> N;
+    int N, l; cin >> N >> l;
+    vector<int> v;
 
-    vector<pii> v(N+1);
-    for (int i = 1; i <= N; i++) {
-        cin >> v[i].x >> v[i].y;
+    for (int i = 0; i < N; i++) {
+        int x; cin >> x;
+        v.push_back(x);
     }
+    sort(all(v));
 
-    int ret = -1;
-    for (int i = 1; i <= N; i++) {
-        int cnt = 0;
-        for (int j = 1; j <= N; j++) {
-            if ((v[j].x <= i && i <= v[j].y)) {
-                cnt++;
-            }
-        }
-        if (cnt == i) {
-            ret = max(ret, cnt);
-        }
-    }       
-    cout << ret << endl;
+    int L, R; 
+    L = 0, R = N - 1;
+
+    int ans = 0;
+    while (L < R) {
+        if (v[L] + v[R] <= l) ans++, L++, R--;
+        else R--, ans++;
+    }
+    if (L == R) ans++;
+    cout << ans << endl;
+    
     return 0;
 }
