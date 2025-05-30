@@ -10,7 +10,7 @@
 
 *.DS_Store
 
-*test.cpp
+*test*.*
 *template.cpp
 
 *.in

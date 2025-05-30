@@ -19,28 +19,12 @@ int main() {
     fastio;
     
     int N; cin >> N;
-    vector<int> v; v.resize(N); for (auto &i : v) cin >> i;
+    string s; cin >> s; reverse(all(s));
 
-    int ret = N;
+    int ret = 0;
     for (int i = 0; i < N-1; i++) {
-        for (int j = i+1; j < N; j++) {
-            int prev = v[i];
-            bool f = (v[i] < v[i+1]);
-            bool f2 = true;
-            for (int k = i+1; k <= j; k++) {
-                int cur = v[k];
-                if (f && prev < cur || !f && prev > cur) {
-                    f = !f;
-                    prev = cur;
-                } else {
-                    f2 = false;
-                    break;
-                }
-            }
-            if (f2) {
-                ret++;
-            }
-        }
+        if (!ret && s[i] == '1') ret++;
+        else if (ret && s[i] == '0') ret++;
     }
     cout << ret << endl;
     return 0;

@@ -15,33 +15,37 @@ using ld = long double;
 using pii = pair<int, int>;
 using pll = pair<ll, ll>;
 
+int N, C;
+vector<int> v;
+
 int main() {
     fastio;
-    
-    int N; cin >> N;
-    vector<int> v; v.resize(N); for (auto &i : v) cin >> i;
 
-    int ret = N;
+    cin >> N >> C;
+    v.resize(N);
+    for (int i = 0; i < N; i++) cin >> v[i];
+
+    sort(all(v));
+
     for (int i = 0; i < N-1; i++) {
         for (int j = i+1; j < N; j++) {
-            int prev = v[i];
-            bool f = (v[i] < v[i+1]);
-            bool f2 = true;
-            for (int k = i+1; k <= j; k++) {
-                int cur = v[k];
-                if (f && prev < cur || !f && prev > cur) {
-                    f = !f;
-                    prev = cur;
-                } else {
-                    f2 = false;
-                    break;
-                }
+            if (v[i] + v[j] == C || v[i] == C || v[j] == C) {
+                cout << 1 << endl;
+                return 0;
             }
-            if (f2) {
-                ret++;
+
+            int lo = j+1, hi = N;
+            while (lo + 1 < hi) {
+                int mid = (lo + hi) / 2;
+                if (v[i] + v[j] + v[mid] <= C) lo = mid;
+                else hi = mid;
+            }
+            if (v[i] + v[j] + v[lo] == C) {
+                cout << 1 << endl;
+                return 0;
             }
         }
     }
-    cout << ret << endl;
+    cout << 0 << endl;
     return 0;
 }

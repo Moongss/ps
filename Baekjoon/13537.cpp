@@ -23,56 +23,71 @@ using ld = long double;
 using pii = pair<int, int>;
 using pll = pair<ll, ll>;
 
-int N;
-vector<int> tr[404040];
-vector<int> adj[100001];
-int arr[100001];
-int cnt = 0;
-
-void init(int s, int e, int node) {
-    if (s == e) {
-        tr[node].push_back(arr[s]);
-        return;
+int sqrtN;
+struct Query {
+    int i, l, r, ans;
+    bool operator<(const Query &o) const {
+        if (l / sqrtN != o.l / sqrtN) return l < o.l;
+        return r < o.r;
     }
-    int m = s + e >> 1;
-    init(s, m, node << 1);
-    init(m+1, e, node << 1 | 1);
+};
 
-    vector<int> &l = tr[node << 1];
-    vector<int> &r = tr[node << 1 | 1];
+int N, M;
+vector<int> v;
+vector<Query> qv;
 
-    int i = 0, j = 0;
-    while (i < l.size() && j < r.size()) {
-        if (l[i] < r[j]) tr[node].push_back(l[i++]);
-        else tr[node].push_back(r[j++]);
-    }
-
-    while (i < l.size()) tr[node].push_back(l[i++]);
-    while (j < r.size()) tr[node].push_back(r[j++]);
-}
-
-ll query(int s, int e, int l, int r, int k, int node) {
-    if (r < s || e < l) return 0;
-    if (l <= s && e <= r) return tr[node].size() - upper(tr[node], k);
-
-    int m = s + e >> 1;
-    return (query(s, m, l, r, k, node << 1) + query(m+1, e, l, r, k, node << 1 | 1));
-}
+int cnt[1010101];
+int ans[1010101];
 
 int main() {
     fastio;
     
-    cin >> N;
-    for (int i = 1; i <= N; i++) {
-        cin >> arr[i];
-    }
-    init(1, N, 1);
+    cin >> N; v.resize(N);
+    sqrtN = sqrt(N);
+    for (auto &i : v) cin >> i;
 
-    ll ans = 0;
-    int M; cin >> M;
-    for (int i = 1; i <= M; i++) {
-        int s, e, k; cin >> s >> e >> k;
-        cout << query(1, N, s, e, k, 1) << endl; 
+    cin >> M; qv.resize(M);
+    for (int i = 0; i < M; i++) {
+        int l, r; cin >> l >> r; l--; r--;
+        qv[i] = {i, l, r};
     }
+    sort(all(qv));
+
+    int ret = 0;
+    for (int i = qv[0].l; i <= qv[0].r; i++) {
+        if (cnt[v[i]]++ == 0) ret++;
+    }
+
+    qv[0].ans = ret;
+    pii prv = {qv[0].l, qv[0].r};
+
+    for (int i = 1; i < M; i++) {
+        while (prv.x < qv[i].l) {
+            cnt[v[prv.x]]--;
+            if (cnt[v[prv.x]] == 0) ret--;
+            prv.x++;
+        }
+        while (prv.x > qv[i].l) {
+            prv.x--;
+            if (cnt[v[prv.x]] == 0) ret++;
+            cnt[v[prv.x]]++;
+        }
+        while (prv.y < qv[i].r) {
+            prv.y++;
+            if (cnt[v[prv.y]] == 0) ret++;
+            cnt[v[prv.y]]++;
+        }
+        while (prv.y > qv[i].r) {
+            cnt[v[prv.y]]--;
+            if (cnt[v[prv.y]] == 0) ret--;
+            prv.y--;
+        }
+        qv[i].ans = ret;
+    }
+
+    sort(all(qv), [](const Query &a, const Query &b) {
+        return a.i < b.i;
+    });
+    for (auto &e : qv) cout << e.ans << endl;
     return 0;
 }
