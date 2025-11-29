@@ -25,3 +25,7 @@
 *strym/
 *yourssu*/
 .cph/
+
+stress*.*
+*bin/
+*tests/
